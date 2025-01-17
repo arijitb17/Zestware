@@ -1,0 +1,543 @@
+"use client"
+import React, { useState, useEffect } from "react";
+import tshirtData from "@/public/custom/thsirts.json";
+
+const CustomTShirt: React.FC = () => {
+  const [selectedType, setSelectedType] = useState<string>("Round Neck");
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
+  const [uploadedLogo, setUploadedLogo] = useState<File | null>(null);
+  const [customText, setCustomText] = useState<string>("");
+  const [textColor, setTextColor] = useState<string | null>("white");
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // Logo Position and Size for Adjustment in Modal
+  const [logoPosition, setLogoPosition] = useState<{ x: number; y: number }>({ x: 100, y: 100 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const tshirt = tshirtData.tshirts.find((t) => t.type === selectedType);
+
+  const getTShirtImage = () => {
+    if (selectedColor) {
+      return tshirt?.colors.find((c) => c.name === selectedColor)?.imageUrl;
+    }
+    if (selectedTexture) {
+      return tshirt?.textures.find((t) => t.name === selectedTexture)?.imageUrl;
+    }
+    return tshirt?.imageUrl;
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadedLogo(e.target.files[0]);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedColor(null);
+    if (tshirt?.textures?.length) {
+      setSelectedTexture(null);
+    }
+  }, [tshirt]);
+
+  // Open Modal for Logo Adjustment
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Handle Mouse Events for Dragging Logo
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - logoPosition.x, y: e.clientY - logoPosition.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      setLogoPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-transparent text-white flex flex-col items-center p-10 font-sans">
+      <div className="w-full max-w-7xl flex flex-col lg:flex-row justify-between space-y-10 lg:space-y-0">
+        {/* Left Panel */}
+        <div className="flex flex-col space-y-8 lg:w-1/2">
+          <h1 className="text-4xl font-bold text-yellow-500">Customized T-Shirt</h1>
+
+          {/* Select Type */}
+          <div className="flex items-center space-x-6">
+            <label className="text-2xl font-thin">SELECT TYPE</label>
+            <select
+              className="bg-gray-900 border text-slate-100 px-10 py-3 rounded-3xl"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+            >
+              {tshirtData.tshirts.map((tshirt) => (
+                <option key={tshirt.id} value={tshirt.type}>
+                  {tshirt.type}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Select Size */}
+          <div className="flex items-center space-x-4">
+            <label className="text-2xl font-thin">SELECT SIZE</label>
+            <div className="flex space-x-3">
+              {["S", "M", "L", "XL", "XXL"].map((size) => (
+                <button
+                  key={size}
+                  className={`py-2 px-4 rounded-3xl w-16 h-12 flex items-center justify-center ${
+                    selectedSize === size
+                      ? "bg-yellow-500 text-black"
+                      : "bg-transparent border text-white"
+                  }`}
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Select Color */}
+          <div className="flex items-center space-x-4">
+            <label className="text-2xl font-thin">SELECT COLOR</label>
+            <div className="flex space-x-3">
+              {tshirt?.colors.map((color) => (
+                <div
+                  key={color.name}
+                  className={`w-8 h-8 rounded-full cursor-pointer border ${
+                    selectedColor === color.name ? "border-yellow-500" : "border-gray-400"
+                  }`}
+                  style={{ backgroundColor: color.name.toLowerCase() }}
+                  onClick={() => {
+                    if (selectedColor === color.name) {
+                      setSelectedColor(null);
+                    } else {
+                      setSelectedColor(color.name);
+                      setSelectedTexture(null);
+                    }
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Add Logo */}
+          <div className="flex items-center space-x-4">
+            <label className="text-2xl font-thin">ADD LOGO</label>
+            <div className="flex space-x-3">
+              <input
+                type="file"
+                className="hidden"
+                id="logoUpload"
+                onChange={handleLogoUpload}
+              />
+              <label
+                htmlFor="logoUpload"
+                className="bg-transparent border text-white px-4 py-2 rounded-lg cursor-pointer"
+              >
+                Upload File
+              </label>
+              <button
+                className="bg-transparent border text-white px-4 py-2 rounded-lg"
+                onClick={openModal}
+              >
+                Adjust Logo
+              </button>
+            </div>
+          </div>
+
+          {/* Add Text */}
+          <div className="flex items-center space-x-4">
+            <label className="text-2xl font-thin">ADD TEXT</label>
+            <div className="flex space-x-3">
+              <input
+                type="text"
+                className="bg-transparent border text-white p-2 rounded-lg w-full"
+                placeholder="Add custom text"
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+              />
+              <button className="bg-transparent border text-white px-4 py-2 rounded-lg">Adjust</button>
+            </div>
+          </div>
+
+          {/* Text Color */}
+          <div className="flex items-center space-x-4">
+            <label className="text-2xl font-thin">TEXT COLOUR</label>
+            <div className="flex space-x-3">
+              {["white", "blue", "red", "yellow", "gray"].map((color) => (
+                <div
+                  key={color}
+                  className={`w-8 h-8 rounded-full cursor-pointer border ${
+                    textColor === color ? "border-yellow-500" : "border-gray-400"
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setTextColor(textColor === color ? "white" : color)}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Upload Design */}
+          <button className="bg-transparent border text-white px-5 py-3 rounded-md w-72 mt-4">
+            Upload your own design
+          </button>
+        </div>
+
+        {/* Right Panel */}
+        <div className="flex flex-col items-center lg:w-1/2 lg:ml-10">
+          <div className="relative">
+            <img
+              src={getTShirtImage()}
+              alt="T-Shirt"
+              className="w-full h-full rounded-md object-cover"
+            />
+            {uploadedLogo && (
+              <img
+                src={URL.createObjectURL(uploadedLogo)}
+                alt="Uploaded Logo"
+                className="absolute"
+                style={{
+                  top: `${logoPosition.y}px`,
+                  left: `${logoPosition.x}px`,
+                  width: `64px`, // You can make the width and height dynamic
+                  height: `64px`,
+                }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+              />
+            )}
+            {customText && (
+              <p
+                className="absolute bottom-10 left-10 text-xl font-bold"
+                style={{ color: textColor || "white" }}
+              >
+                {customText}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Logo Adjustment Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg relative">
+            <h2 className="text-2xl font-bold mb-4">Adjust Your Logo</h2>
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-xl font-bold text-gray-600"
+            >
+              &times;
+            </button>
+            <div
+              className="relative bg-gray-200 w-full h-64 rounded-lg border border-gray-400"
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              {uploadedLogo && (
+                <img
+                  src={URL.createObjectURL(uploadedLogo)}
+                  alt="Uploaded Logo"
+                  className="absolute"
+                  style={{
+                    top: `${logoPosition.y}px`,
+                    left: `${logoPosition.x}px`,
+                    width: `${64}px`, // Width can also be dynamic
+                    height: `${64}px`,
+                  }}
+                  onMouseDown={handleMouseDown}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CustomTShirt;
+
+
+
+
+"use client";
+import React, { useState } from "react";
+import tshirtData from "@/public/custom/thsirts.json";
+
+const CustomTShirt: React.FC = () => {
+  const [selectedType, setSelectedType] = useState<string>("Round Neck");
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
+  const [uploadedLogosFront, setUploadedLogosFront] = useState<File[]>([]);
+  const [uploadedLogosBack, setUploadedLogosBack] = useState<File[]>([]);
+  const [customTextFront, setCustomTextFront] = useState<string>("");
+  const [customTextBack, setCustomTextBack] = useState<string>("");
+  const [textColorFront, setTextColorFront] = useState<string>("white");
+  const [textColorBack, setTextColorBack] = useState<string>("white");
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
+  const [view, setView] = useState<"front" | "back">("front");
+  const [logoPositionsFront, setLogoPositionsFront] = useState<{ x: number; y: number }[]>([{ x: 100, y: 100 }]);
+  const [logoPositionsBack, setLogoPositionsBack] = useState<{ x: number; y: number }[]>([{ x: 100, y: 100 }]);
+  const [logoSizesFront, setLogoSizesFront] = useState<number[]>([64]);
+  const [logoSizesBack, setLogoSizesBack] = useState<number[]>([64]);
+  const [textPositionFront, setTextPositionFront] = useState<{ x: number; y: number }>({ x: 50, y: 150 });
+  const [textPositionBack, setTextPositionBack] = useState<{ x: number; y: number }>({ x: 50, y: 150 });
+
+  const tshirt = tshirtData.tshirts.find((t) => t.type === selectedType);
+
+  const getTShirtImage = (view: "front" | "back") => {
+    if (selectedColor) {
+      const selectedColorData = tshirt?.colors.find((c) => c.name === selectedColor);
+      return view === "front" ? selectedColorData?.frontImageUrl : selectedColorData?.backImageUrl;
+    }
+
+    if (selectedTexture) {
+      const selectedTextureData = tshirt?.textures.find((t) => t.name === selectedTexture);
+      return view === "front" ? selectedTextureData?.frontImageUrl : selectedTextureData?.backImageUrl;
+    }
+
+    return view === "front" ? tshirt?.frontImageUrl : tshirt?.backImageUrl;
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>, view: "front" | "back") => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (view === "front") {
+        setUploadedLogosFront((prev) => [...prev, file]);
+        setLogoPositionsFront((prev) => [...prev, { x: 100, y: 100 }]);
+        setLogoSizesFront((prev) => [...prev, 64]);
+      } else {
+        setUploadedLogosBack((prev) => [...prev, file]);
+        setLogoPositionsBack((prev) => [...prev, { x: 100, y: 100 }]);
+        setLogoSizesBack((prev) => [...prev, 64]);
+      }
+    }
+  };
+
+  const handleRemoveLogo = (index: number, view: "front" | "back") => {
+    if (view === "front") {
+      setUploadedLogosFront((prev) => prev.filter((_, idx) => idx !== index));
+      setLogoPositionsFront((prev) => prev.filter((_, idx) => idx !== index));
+      setLogoSizesFront((prev) => prev.filter((_, idx) => idx !== index));
+    } else {
+      setUploadedLogosBack((prev) => prev.filter((_, idx) => idx !== index));
+      setLogoPositionsBack((prev) => prev.filter((_, idx) => idx !== index));
+      setLogoSizesBack((prev) => prev.filter((_, idx) => idx !== index));
+    }
+  };
+
+  const moveLogo = (direction: "up" | "down" | "left" | "right", index: number, view: "front" | "back") => {
+    const step = 10;
+    if (view === "front") {
+      setLogoPositionsFront((prev) => {
+        const newPositions = [...prev];
+        switch (direction) {
+          case "up":
+            newPositions[index].y -= step;
+            break;
+          case "down":
+            newPositions[index].y += step;
+            break;
+          case "left":
+            newPositions[index].x -= step;
+            break;
+          case "right":
+            newPositions[index].x += step;
+            break;
+        }
+        return newPositions;
+      });
+    } else {
+      setLogoPositionsBack((prev) => {
+        const newPositions = [...prev];
+        switch (direction) {
+          case "up":
+            newPositions[index].y -= step;
+            break;
+          case "down":
+            newPositions[index].y += step;
+            break;
+          case "left":
+            newPositions[index].x -= step;
+            break;
+          case "right":
+            newPositions[index].x += step;
+            break;
+        }
+        return newPositions;
+      });
+    }
+  };
+
+  const resizeLogo = (direction: "increase" | "decrease", index: number, view: "front" | "back") => {
+    const step = 10;
+    if (view === "front") {
+      setLogoSizesFront((prev) => {
+        const newSizes = [...prev];
+        const newSize = direction === "increase" ? newSizes[index] + step : newSizes[index] - step;
+        newSizes[index] = Math.max(30, newSize);
+        return newSizes;
+      });
+    } else {
+      setLogoSizesBack((prev) => {
+        const newSizes = [...prev];
+        const newSize = direction === "increase" ? newSizes[index] + step : newSizes[index] - step;
+        newSizes[index] = Math.max(30, newSize);
+        return newSizes;
+      });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center p-10 font-sans">
+      <div className="w-full max-w-7xl flex flex-col lg:flex-row justify-between gap-10 lg:gap-20">
+        {/* T-Shirt Preview */}
+        <div className="lg:w-3/4 flex flex-col items-center bg-gradient-to-b from-gray-700 to-gray-900 rounded-lg p-6 shadow-xl relative">
+          <div className="relative w-full h-full">
+            <img
+              src={getTShirtImage(view) || ""}
+              alt={`T-Shirt ${view}`}
+              className="w-full h-full object-cover rounded-lg shadow-md"
+            />
+            {(view === "front" ? uploadedLogosFront : uploadedLogosBack).map((logo, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(logo)}
+                alt="Uploaded Logo"
+                className="absolute transition-transform duration-300"
+                style={{
+                  top: `${view === "front" ? logoPositionsFront[index].y : logoPositionsBack[index].y}px`,
+                  left: `${view === "front" ? logoPositionsFront[index].x : logoPositionsBack[index].x}px`,
+                  width: `${view === "front" ? logoSizesFront[index] : logoSizesBack[index]}px`,
+                  height: `${view === "front" ? logoSizesFront[index] : logoSizesBack[index]}px`,
+                }}
+              />
+            ))}
+            {(view === "front" ? customTextFront : customTextBack) && (
+              <p
+                className="absolute text-xl font-bold"
+                style={{
+                  color: view === "front" ? textColorFront : textColorBack,
+                  top: `${view === "front" ? textPositionFront.y : textPositionBack.y}px`,
+                  left: `${view === "front" ? textPositionFront.x : textPositionBack.x}px`,
+                }}
+              >
+                {view === "front" ? customTextFront : customTextBack}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Tools Panel */}
+        <div className="lg:w-1/4 flex flex-col space-y-6 bg-gray-700 p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold text-yellow-500 mb-4">Customize Your T-Shirt</h2>
+
+          {/* View Buttons */}
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-white mb-2">View</h3>
+            <button
+              className={`w-full py-2 px-4 rounded-md ${view === "front" ? "bg-yellow-500 text-black" : "bg-gray-600"}`}
+              onClick={() => setView("front")}
+            >
+              Front View
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-md ${view === "back" ? "bg-yellow-500 text-black" : "bg-gray-600"}`}
+              onClick={() => setView("back")}
+            >
+              Back View
+            </button>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-white mb-2">Upload Logo</h3>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleLogoUpload(e, view)}
+              className="w-full bg-gray-600 text-white p-2 rounded-md"
+            />
+          </div>
+
+          {/* Logo Controls */}
+          {(view === "front" ? uploadedLogosFront : uploadedLogosBack).map((_, index) => (
+            <div key={index} className="space-y-2">
+              <h3 className="text-sm font-semibold text-white">Logo {index + 1}</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => moveLogo("up", index, view)}
+                  className="bg-blue-500 text-white py-1 px-2 rounded-md"
+                >
+                  Up
+                </button>
+                <button
+                  onClick={() => moveLogo("down", index, view)}
+                  className="bg-blue-500 text-white py-1 px-2 rounded-md"
+                >
+                  Down
+                </button>
+                <button
+                  onClick={() => moveLogo("left", index, view)}
+                  className="bg-blue-500 text-white py-1 px-2 rounded-md"
+                >
+                  Left
+                </button>
+                <button
+                  onClick={() => moveLogo("right", index, view)}
+                  className="bg-blue-500 text-white py-1 px-2 rounded-md"
+                >
+                  Right
+                </button>
+                <button
+                  onClick={() => resizeLogo("increase", index, view)}
+                  className="bg-green-500 text-white py-1 px-2 rounded-md"
+                >
+                  Increase Size
+                </button>
+                <button
+                  onClick={() => resizeLogo("decrease", index, view)}
+                  className="bg-red-500 text-white py-1 px-2 rounded-md"
+                >
+                  Decrease Size
+                </button>
+                <button
+                  onClick={() => handleRemoveLogo(index, view)}
+                  className="bg-red-600 text-white py-1 px-2 rounded-md"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {/* Upload Logo */}
+        
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CustomTShirt;

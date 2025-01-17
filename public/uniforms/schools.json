@@ -1,0 +1,122 @@
+{
+  "districts": {
+    "Kamrup": [
+      {
+        "name": "Don Bosco School",
+        "uniforms": [
+          {
+            "id": 1,
+            "name": "Half Sleeve White Shirt",
+            "slug": "half-sleeved-dbs-shirt",
+            "image": "/uniforms/half.png",
+            "price": "₹250",
+            "mrp": "₹300",
+            "rating": 4.5,
+            "discount": "17%"
+          },
+          {
+            "id": 2,
+            "name": "Full Sleeve White Shirt",
+            "slug": "full-sleeved-dbs-shirt",
+            "image": "/uniforms/dbs_full.png",
+            "price": "₹300",
+            "mrp": "₹350",
+            "rating": 4.7,
+            "discount": "14%"
+          },
+          {
+            "id": 3,
+            "name": "Black Long Pant",
+            "slug": "black-dbs-pants",
+            "image": "/uniforms/dbs_pant.png",
+            "price": "₹500",
+            "mrp": "₹600",
+            "rating": 4.3,
+            "discount": "16%"
+          }
+        ]
+      },
+      {
+        "name": "Delhi Public School Guwahati",
+        "uniforms": [
+          {
+            "id": 4,
+            "name": "White Skirt for Girls",
+            "slug": "dps-skirt",
+            "image": "/uniforms/dps-skirt.png",
+            "price": "₹400",
+            "mrp": "₹450",
+            "rating": 4.6,
+            "discount": "11%"
+          },
+          {
+            "id": 5,
+            "name": "Full Sleeve Shirt",
+            "slug": "full-sleeved-full-shirt",
+            "image": "/uniforms/dps-full.png",
+            "price": "₹320",
+            "mrp": "₹400",
+            "rating": 4.8,
+            "discount": "20%"
+          },
+          {
+            "id": 6,
+            "name": "Grey Long Pant",
+            "slug": "grey-pants",
+            "image": "/uniforms/dps-pant.png",
+            "price": "₹550",
+            "mrp": "₹650",
+            "rating": 4.4,
+            "discount": "15%"
+          }
+        ]
+      }
+    ],
+    "Dibrugarh": [
+      {
+        "name": "Don Bosco School",
+        "uniforms": [
+          {
+            "id": 1,
+            "name": "Half Sleeve White Shirt",
+            "slug": "half-sleeved-dbs-shirt",
+            "image": "/uniforms/half.png",
+            "price": "₹250",
+            "mrp": "₹300",
+            "rating": 4.5,
+            "discount": "17%"
+          }]}]
+  },  "defaultUniforms": [
+    {
+      "id": 7,
+      "name": "Half Sleeve White Shirt",
+      "slug": "half-sleeved-shirt",
+      "image": "/uniforms/half.png",
+      "price": "₹250",
+      "mrp": "₹300",
+      "rating": 4.5,
+      "discount": "17%"
+    },
+    {
+      "id": 8,
+      "name": "Full Sleeve White Shirt",
+      "slug": "full-sleeved-shirt",
+      "image": "/uniforms/full.png",
+      "price": "₹300",
+      "mrp": "₹350",
+      "rating": 4.7,
+      "discount": "14%"
+    },
+    {
+      "id": 9,
+      "name": "Black Long Pant",
+      "slug": "black-pants",
+      "image": "/uniforms/pant.png",
+      "price": "₹500",
+      "mrp": "₹600",
+      "rating": 4.3,
+      "discount": "16%"
+    }
+  ]
+
+}

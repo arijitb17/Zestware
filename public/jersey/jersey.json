@@ -1,0 +1,59 @@
+{
+    "institutes": [
+      {
+        "name": "Institute 1",
+        "departments": [
+          {
+            "name": "Department 1",
+            "jersey": {
+              "image": "/jersey/jersey1.png",
+              "name":"Black jersey",
+              "price": "₹289",
+              "mrp": "₹500",
+              "discount":"30%",
+              "description": "A stylish and durable sports jersey, perfect for your institute."
+            }
+          },
+          {
+            "name": "Department 2",
+            "jersey": {
+              "image": "/images/jersey-red.png",
+              "name":"Black jersey",
+              "price": "₹350",
+              "mrp": "₹600",
+              "discount":"30%",
+              "description": "A vibrant jersey for your sports activities."
+            }
+          }
+        ]
+      },
+      {
+        "name": "Institute 2",
+        "departments": [
+          {
+            "name": "Department 1",
+            "jersey": {
+              "image": "/images/jersey-blue.png",
+              "name":"Black jersey",
+              "price": "₹299",
+              "mrp": "₹550",
+              "discount":"30%",
+              "description": "A cool and comfortable jersey."
+            }
+          },
+          {
+            "name": "Department 2",
+            "jersey": {
+              "image": "/images/jersey-green.png",
+              "name":"Black jersey",
+              "price": "₹320",
+              "mrp": "₹580",
+              "discount":"30%",
+              "description": "A durable and stylish jersey."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

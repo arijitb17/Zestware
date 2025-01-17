@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "id": 7,
+      "name": "Half Sleeve White Shirt",
+      "slug": "half-sleeved-shirt",
+      "image": "/uniforms/half.png",
+      "price": "₹250",
+      "mrp": "₹300",
+      "rating": 4.5,
+      "discount": "17%"
+    },
+    {
+      "id": 8,
+      "name": "Full Sleeve White Shirt",
+      "slug": "full-sleeved-shirt",
+      "image": "/uniforms/full.png",
+      "price": "₹300",
+      "mrp": "₹350",
+      "rating": 4.7,
+      "discount": "14%"
+    },
+    {
+      "id": 9,
+      "name": "Black Long Pant",
+      "slug": "black-pants",
+      "image": "/uniforms/pant.png",
+      "price": "₹500",
+      "mrp": "₹600",
+      "rating": 4.3,
+      "discount": "16%"
+    }
+  ]
+}

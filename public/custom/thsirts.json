@@ -1,0 +1,64 @@
+{
+  "tshirts": [
+    {
+      "id": 1,
+      "type": "Round Neck",
+      "colors": [
+        { 
+          "name": "Red", 
+          "frontImageUrl": "/images/i1-front.png", 
+          "backImageUrl": "/images/i1-back.png" 
+        },
+        { 
+          "name": "Black", 
+          "frontImageUrl": "/images/tshirt-black-front.png", 
+          "backImageUrl": "/images/tshirt-black-back.png" 
+        }
+      ],
+      "textures": [
+        { 
+          "name": "Texture1", 
+          "frontImageUrl": "/custom/round-texture1-front.png", 
+          "backImageUrl": "/custom/round-texture1-back.png" 
+        },
+        { 
+          "name": "Texture2", 
+          "frontImageUrl": "/images/tshirt-texture2-front.png", 
+          "backImageUrl": "/images/tshirt-texture2-back.png" 
+        }
+      ],
+      "frontImageUrl": "/custom/round-neck.png",
+      "backImageUrl": "/custom/round-neckb.png"
+    },
+    {
+      "id": 2,
+      "type": "Polo",
+      "colors": [
+        { 
+          "name": "Green", 
+          "frontImageUrl": "/images/polo-green-front.png", 
+          "backImageUrl": "/images/polo-green-back.png" 
+        },
+        { 
+          "name": "Blue", 
+          "frontImageUrl": "/images/polo-blue-front.png", 
+          "backImageUrl": "/images/polo-blue-back.png" 
+        }
+      ],
+      "textures": [
+        { 
+          "name": "PoloTexture1", 
+          "frontImageUrl": "/images/polo-texture1-front.png", 
+          "backImageUrl": "/images/polo-texture1-back.png" 
+        },
+        { 
+          "name": "PoloTexture2", 
+          "frontImageUrl": "/images/polo-texture2-front.png", 
+          "backImageUrl": "/images/polo-texture2-back.png" 
+        }
+      ],
+      "frontImageUrl": "/custom/polo-front.png",
+      "backImageUrl": "/custom/polo-back.png"
+    }
+  ]
+}
