@@ -3,18 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-
 import Underline from "./Underline";
 import AccountMenu from "./AccountMenu";
+import { SessionProvider } from "next-auth/react";
+
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname(); // Use this instead of useRouter
-
+  const pathname = usePathname(); 
+ 
+ 
   const isActive = (path: string) => pathname === path;
 
   return (
-    <div>
+    <SessionProvider>
+     <div>
       <div className="w-full p-4 flex items-center justify-between">
         <div className="text-white text-xl font-bold">
           <Link href="/">
@@ -28,12 +32,7 @@ const Navbar = () => {
         </div>
 
         <div className="md:flex items-center hidden">
-          <Link
-            href="/auth/SignUp"  // Updated to reflect the correct path
-            className={`mx-4 ${isActive("/auth/SignUp") ? "text-yellow-500" : "text-white"}`}
-          >
-            SIGNUP
-          </Link>
+        
           <Link
             href="/"
             className={`mx-4 ${isActive("/") ? "text-yellow-500" : "text-white"}`}
@@ -65,7 +64,9 @@ const Navbar = () => {
             CONTACT
           </Link>
           <div className="hover:text-yellow-400">
-          <AccountMenu />
+           
+               <AccountMenu />
+         
           </div>
         </div>
 
@@ -136,6 +137,8 @@ const Navbar = () => {
         <Underline color="white" thickness="2px" width="90%" />
       </div>
     </div>
+  
+    </SessionProvider>
   );
 };
 

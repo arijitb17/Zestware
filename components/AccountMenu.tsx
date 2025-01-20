@@ -1,16 +1,18 @@
+"use client";
 import { useState } from 'react';
 import Link from 'next/link';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { FaShoppingCart, FaHeart, FaClipboardList, FaSignOutAlt } from 'react-icons/fa';
 
+import { useSession,signIn,signOut } from 'next-auth/react';
 const AccountMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   // Toggle the dropdown visibility
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  const session = useSession();
   return (
     <div className="relative">
       {/* Account Icon */}
@@ -51,12 +53,12 @@ const AccountMenu: React.FC = () => {
               </Link>
             </li>
             <li className="mt-2">
-              <Link
-                href="/logout"
-                className="flex items-center px-4 py-2 border border-white rounded-2xl bg-transparent hover:text-red-600 transition-colors"
+            <Link
+                href="/api/auth/signin"
+                className="flex items-center px-4 py-2 border border-white rounded-2xl bg-transparent hover:text-yellow-500 transition-colors"
               >
                 <FaSignOutAlt className="w-5 h-5 mr-2" />
-                Log Out
+                {session.status=== "unauthenticated" ? <button onClick={()=>{signIn()}}>Sign In</button>:<button onClick={()=>{signOut()}}>LogOut</button>}
               </Link>
             </li>
           </ul>
