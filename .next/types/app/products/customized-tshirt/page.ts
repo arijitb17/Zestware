@@ -1,4 +1,4 @@
-// File: E:\zest\app\products\customized-tshirt\page.tsx
+// File: C:\Users\Shubrajit\Desktop\projects\Zestware\app\products\customized-tshirt\page.tsx
 import * as entry from '../../../../../app/products/customized-tshirt/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
