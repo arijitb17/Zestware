@@ -23,7 +23,12 @@ model Products {
   id             Int       @id@default(autoincrement())
   type           String 
   price          String
+  mrp            String
   description    String 
+  artistDescription String
+  discount       String
+  image          String[]
+  details        String
   orders         Orders[]
 }
 
@@ -35,3 +40,4 @@ model Orders {
   user         Users      @relation( fields: [UserId],references: [id])
   product      Products   @relation(fields: [ProductId],references: [id])
 }
+ 
