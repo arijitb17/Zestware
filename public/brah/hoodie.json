@@ -1,67 +1,40 @@
 [
-    {
-      "id": 1,
-      "name": "Black 300 gsm Full-Zip Hoodie",
-      "price": "₹1499",
-      "description": "A cozy black hoodie perfect for chilly evenings.",
-      "artistDescription": "Designed by a rising urban artist with a flair for monochrome aesthetics.",
-      "image": "/brah/stock/hoodie1/hoodie-main.png",
-      "mrp": "₹1999",
-      "discount": "25%",
-      "stockPhotos": [
-        "/brah/stock/hoodie1/stock1.png",
-        "/brah/stock/hoodie1/stock2.png",
-        "/brah/stock/hoodie1/stock3.png"
-      ],
-      "details": "Material & Care: 100% Cotton, Machine Wash Cold"
-    },
-    {
-      "id": 2,
-      "name": "Grey Pullover Hoodie with Kangaroo Pocket",
-      "price": "₹1799",
-      "description": "A versatile grey hoodie with a soft inner lining.",
-      "artistDescription": "Created by a minimalist designer with an eye for comfort and style.",
-      "image": "/images/hoodie2.png",
-      "mrp": "₹2299",
-      "discount": "22%",
-      "stockPhotos": [
-        "/images/stock13.jpg",
-        "/images/stock14.jpg",
-        "/images/stock15.jpg"
-      ],
-      "details": "Material & Care: Cotton-Polyester Blend, Machine Wash"
-    },
-    {
-      "id": 3,
-      "name": "Navy Blue Oversized Hoodie",
-      "price": "₹1999",
-      "description": "An oversized hoodie for a relaxed and trendy look.",
-      "artistDescription": "Designed by an emerging streetwear brand known for bold and comfortable styles.",
-      "image": "/images/hoodie3.png",
-      "mrp": "₹2499",
-      "discount": "20%",
-      "stockPhotos": [
-        "/images/stock16.jpg",
-        "/images/stock17.jpg",
-        "/images/stock18.jpg"
-      ],
-      "details": "Material & Care: Fleece-Lined Cotton, Hand Wash Recommended"
-    },
-    {
-      "id": 4,
-      "name": "White Lightweight Hoodie",
-      "price": "₹1299",
-      "description": "A lightweight hoodie ideal for layering.",
-      "artistDescription": "Crafted by an eco-conscious designer promoting sustainable fashion.",
-      "image": "/brah/hoodie-white.png",
-      "mrp": "₹1699",
-      "discount": "24%",
-      "stockPhotos": [
-        "/images/stock19.jpg",
-        "/images/stock20.jpg",
-        "/images/stock21.jpg"
-      ],
-      "details": "Material & Care: Organic Cotton, Machine Wash Delicate"
-    }
-  ]
-  
+  {
+    "id": 1,
+    "name": "Black 300 gsm Full-Zip Hoodie",
+    "price": "₹1499",
+    "description": "A cozy black hoodie perfect for chilly evenings.",
+    "artistDescription": "Designed by a rising urban artist with a flair for monochrome aesthetics.",
+    "image": "/brah/stock/hoodie1/hoodie-main.png",
+    "mrp": "₹1999",
+    "discount": "25%",
+    "stockPhotos": [
+      "/brah/stock/hoodie1/stock1.png",
+      "/brah/stock/hoodie1/stock2.png",
+      "/brah/stock/hoodie1/stock3.png"
+    ],
+    "details": "Material & Care: 100% Cotton, Machine Wash Cold"
+  },
+  {
+    "id": 1737307097779,
+    "name": "Arijit ",
+    "price": "2000",
+    "description": "frfrfrfrf",
+    "image": "https://i.ibb.co/Y2mQX6w/round-texture1.png",
+    "type": "",
+    "colors": [],
+    "textures": [],
+    "frontImageUrl": "",
+    "backImageUrl": "",
+    "mrp": "3000",
+    "discount": "20%",
+    "artistDescription": "frfrfrf",
+    "stockPhotos": [
+      "https://i.ibb.co/Y2mQX6w/round-texture1.png"
+    ],
+    "materials": "frfrfrfr",
+    "district": "",
+    "school": "",
+    "uniform": ""
+  }
+]

@@ -32,22 +32,6 @@
     "details": "Material & Care: Polyester Blend, Machine Wash"
   },
   {
-    "id": 3,
-    "name": "T-shirt 3",
-    "price": "₹2200",
-    "description": "A classic T-shirt with a modern design",
-    "artistDescription": "Designed by a contemporary artist with a passion for minimalist art.",
-    "image": "/images/i3.png",
-    "mrp": "₹2800",
-    "discount": "21%",
-    "stockPhotos": [
-      "/images/stock7.jpg",
-      "/images/stock8.jpg",
-      "/images/stock9.jpg"
-    ],
-    "details": "Material & Care: 100% Organic Cotton, Hand Wash"
-  },
-  {
     "id": 4,
     "name": "T-shirt 4",
     "price": "₹3000",

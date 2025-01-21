@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id           Int          @id @default(autoincrement())
+  name         String       @unique // e.g., Brahmand or Nirbhay
+  description  String?
+  subcategories Subcategory[]
+}
+
+model Subcategory {
+  id          Int       @id @default(autoincrement())
+  name        String    // e.g., Hoodies, T-Shirts
+  categoryId  Int       // Foreign key to Category
+  category    Category  @relation(fields: [categoryId], references: [id])
+  products    Product[]
+}
+
+model Product {
+  id                 Int       @id @default(autoincrement())
+  name               String
+  price              Float
+  description        String
+  artistDescription  String?
+  image              String
+  mrp                Float
+  discount           Float?
+  stockPhotos        String[]
+  details            String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relationships
+  subcategoryId      Int
+  subcategory        Subcategory @relation(fields: [subcategoryId], references: [id])
+
+  // Custom fields for specific product types (like customized T-Shirts)
+  type               String?     // For Customized T-Shirts (e.g., Round Neck, Polo)
+  colors             Json?       // Array of colors with front and back images
+  textures           Json?       // Array of textures with front and back images
+  frontImageUrl      String?     // Front image for Customized T-Shirts
+  backImageUrl       String?     // Back image for Customized T-Shirts
+}
+
+model District {
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
+  schools  School[]
+}
+
+model School {
+  id        Int       @id @default(autoincrement())
+  name      String
+  districtId Int      // Foreign key to District
+  district  District  @relation(fields: [districtId], references: [id])
+  uniforms  Uniform[]
+}
+
+model Uniform {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  image       String
+  price       Float
+  mrp         Float
+  rating      Float
+  discount    Float
+  schoolId    Int       // Foreign key to School
+  school      School    @relation(fields: [schoolId], references: [id])
+}
+
+
+model Jersey {
+  id          Int       @id @default(autoincrement())
+  name        String
+  image       String
+  price       Float
+  mrp         Float
+  discount    Float
+  description String
+  department  Department @relation(fields: [departmentId], references: [id])
+  departmentId Int       @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Department {
+  id          Int       @id @default(autoincrement())
+  name        String
+  institute   Institute @relation(fields: [instituteId], references: [id])
+  instituteId Int
+  jersey      Jersey?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Institute {
+  id          Int          @id @default(autoincrement())
+  name        String
+  departments Department[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}

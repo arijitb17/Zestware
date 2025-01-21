@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import tshirtData from "@/public/custom/thsirts.json";
+import tshirtData from "@/public/custom/tshirts.json";
 import Image from "next/image";
 
 

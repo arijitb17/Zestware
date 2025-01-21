@@ -1,67 +1,50 @@
 [
-    {
-      "id": 1,
-      "name": "Off White 240 gsm half sleeved T-Shirt",
-      "price": "₹599",
-      "description": "A comfortable cotton T-shirt with vibrant colors",
-      "artistDescription": "Designed by an emerging local artist known for their bold prints.",
-      "image": "/nirbh/stock/ow/ow-main.png",
-      "mrp": "₹999",
-      "discount": "40%",
-      "stockPhotos": [
-        "/nirbh/stock/ow/stock1.png",
-        "/nirbh/stock/ow/stock2.png",
-        "/nirbh/stock/ow/stock3.png"
-      ],
-      "details": "Material & Care: 100% Cotton, Machine Wash"
-    },
-    {
-      "id": 2,
-      "name": "T-shirt 2",
-      "price": "₹2500",
-      "description": "A stylish and breathable T-shirt for summer",
-      "artistDescription": "Created by a talented designer blending modern and vintage styles.",
-      "image": "/images/i1.png",
-      "mrp": "₹3000",
-      "discount": "15%",
-      "stockPhotos": [
-        "/images/stock4.jpg",
-        "/images/stock5.jpg",
-        "/images/stock6.jpg"
-      ],
-      "details": "Material & Care: Polyester Blend, Machine Wash"
-    },
-    {
-      "id": 3,
-      "name": "T-shirt 3",
-      "price": "₹2200",
-      "description": "A classic T-shirt with a modern design",
-      "artistDescription": "Designed by a contemporary artist with a passion for minimalist art.",
-      "image": "/images/i3.png",
-      "mrp": "₹2800",
-      "discount": "21%",
-      "stockPhotos": [
-        "/images/stock7.jpg",
-        "/images/stock8.jpg",
-        "/images/stock9.jpg"
-      ],
-      "details": "Material & Care: 100% Organic Cotton, Hand Wash"
-    },
-    {
-      "id": 4,
-      "name": "T-shirt 4",
-      "price": "₹3000",
-      "description": "A premium quality T-shirt with a unique print",
-      "artistDescription": "Crafted by a designer who specializes in abstract art.",
-      "image": "/brah/teemain.png",
-      "mrp": "₹3500",
-      "discount": "14%",
-      "stockPhotos": [
-        "/images/stock10.jpg",
-        "/images/stock11.jpg",
-        "/images/stock12.jpg"
-      ],
-      "details": "Material & Care: Premium Fabric, Dry Clean"
-    }
-  ]
-  
+  {
+    "id": 1,
+    "name": "Off White 240 gsm half sleeved T-Shirt",
+    "price": "₹599",
+    "description": "A comfortable cotton T-shirt with vibrant colors",
+    "artistDescription": "Designed by an emerging local artist known for their bold prints.",
+    "image": "/nirbh/stock/ow/ow-main.png",
+    "mrp": "₹999",
+    "discount": "40%",
+    "stockPhotos": [
+      "/nirbh/stock/ow/stock1.png",
+      "/nirbh/stock/ow/stock2.png",
+      "/nirbh/stock/ow/stock3.png"
+    ],
+    "details": "Material & Care: 100% Cotton, Machine Wash"
+  },
+  {
+    "id": 2,
+    "name": "T-shirt 2",
+    "price": "₹2500",
+    "description": "A stylish and breathable T-shirt for summer",
+    "artistDescription": "Created by a talented designer blending modern and vintage styles.",
+    "image": "/images/i1.png",
+    "mrp": "₹3000",
+    "discount": "15%",
+    "stockPhotos": [
+      "/images/stock4.jpg",
+      "/images/stock5.jpg",
+      "/images/stock6.jpg"
+    ],
+    "details": "Material & Care: Polyester Blend, Machine Wash"
+  },
+  {
+    "id": 4,
+    "name": "T-shirt 4",
+    "price": "₹3000",
+    "description": "A premium quality T-shirt with a unique print",
+    "artistDescription": "Crafted by a designer who specializes in abstract art.",
+    "image": "/brah/teemain.png",
+    "mrp": "₹3500",
+    "discount": "14%",
+    "stockPhotos": [
+      "/images/stock10.jpg",
+      "/images/stock11.jpg",
+      "/images/stock12.jpg"
+    ],
+    "details": "Material & Care: Premium Fabric, Dry Clean"
+  }
+]
