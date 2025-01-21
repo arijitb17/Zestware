@@ -16,7 +16,11 @@
     "formidable": "^3.5.2",
     "headlessui": "^0.0.0",
     "next": "15.1.3",
+<<<<<<< HEAD
     "next-connect": "^1.0.0",
+=======
+    "next-auth": "^4.24.11",
+>>>>>>> 5bcb8474b980b348eb0eda13740d75faf5a9c1ec
     "npm": "^11.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
