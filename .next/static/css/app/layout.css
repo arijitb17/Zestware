@@ -752,9 +752,6 @@ video {
 .h-full {
   height: 100%;
 }
-.h-20 {
-  height: 5rem;
-}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -799,12 +796,6 @@ video {
 }
 .w-full {
   width: 100%;
-}
-.w-80 {
-  width: 20rem;
-}
-.w-0 {
-  width: 0px;
 }
 .min-w-\[10rem\] {
   min-width: 10rem;
@@ -1171,10 +1162,6 @@ video {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
-}
-.px-20 {
-  padding-left: 5rem;
-  padding-right: 5rem;
 }
 .pl-10 {
   padding-left: 2.5rem;
@@ -1588,10 +1575,6 @@ body {
 
   .sm\:w-2\/3 {
     width: 66.666667%;
-  }
-
-  .sm\:w-48 {
-    width: 12rem;
   }
 
   .sm\:grid-cols-3 {
