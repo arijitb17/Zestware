@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -5,7 +6,7 @@ import Link from "next/link";
 
 // Define the Product type
 interface Product {
-  id: number;
+  id: string; // Updated to string type since `id` should be a string in the API
   name: string;
   price: string;
   description: string;
@@ -21,7 +22,8 @@ const HoodiesPage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/nirbh/hoodie.json");
+        // Fetch products from the API endpoint (assuming the API is set up for this)
+        const response = await fetch("/api/products?category=hoodie&brand=nirbhay");
 
         if (!response.ok) {
           throw new Error("Failed to fetch product data.");
@@ -48,7 +50,7 @@ const HoodiesPage: React.FC = () => {
         <p className="text-yellow-500 text-2xl text-center">HOODIES</p>
       </div>
       <div className="flex justify-between items-center px-6 py-2">
-        <h1 className="text-7xl font-bold">निर्भय</h1>
+      <h1 className="text-7xl font-bold">निर्भय</h1>
       </div>
 
       {error && <p className="text-red-500 text-center">{error}</p>}
@@ -61,7 +63,7 @@ const HoodiesPage: React.FC = () => {
             className="p-4 rounded-lg text-center flex flex-col items-center bg-transparent hover:shadow-lg transition"
           >
             {/* Link to Product Page */}
-            <Link href={`/nirbhay/hoodie/${product.id}`} className="mb-4">
+            <Link href={`/brahmand/hoodie/${product.id}`} className="mb-4">
               <Image
                 src={product.image}
                 alt={product.name}

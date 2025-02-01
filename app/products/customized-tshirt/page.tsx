@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import tshirtData from "@/public/custom/tshirts.json";
 import Image from "next/image";
-
+import {  useRef, useEffect } from 'react';
 
 
 const CustomTShirt: React.FC = () => {
@@ -26,14 +26,29 @@ const CustomTShirt: React.FC = () => {
   const [logoSizesFront, setLogoSizesFront] = useState<number[]>([64]);
   const [logoSizesBack, setLogoSizesBack] = useState<number[]>([64]);
   const [uploadedTShirtImage, setUploadedTShirtImage] = useState<string | null>(null);
-
+  const [uploadedTShirtFront, setUploadedTShirtFront] = useState<string | null>(null);
+  const [uploadedTShirtBack, setUploadedTShirtBack] = useState<string | null>(null);
   
+  const [orderFormVisible, setOrderFormVisible] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   
+  const getImageForView = () => {
+    if (view === "front" && uploadedTShirtFront) {
+      return uploadedTShirtFront;
+    }
+    if (view === "back" && uploadedTShirtBack) {
+      return uploadedTShirtBack;
+    }
+    // Default: return a placeholder or a default T-shirt image (if no image uploaded)
+    return null; // Replace with your default image
+  };
 
   const tshirt = tshirtData.tshirts.find((t) => t.type === selectedType);
   
-
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const getTShirtImage = (view: "front" | "back") => {
+    
     if (selectedColor) {
       const selectedColorData = tshirt?.colors.find((c) => c.name === selectedColor);
       return view === "front" ? selectedColorData?.frontImageUrl : selectedColorData?.backImageUrl;
@@ -82,6 +97,37 @@ const CustomTShirt: React.FC = () => {
       setLogoSizesBack((prev) => prev.filter((_, idx) => idx !== index));
     }
   };
+  const captureCanvasImages = () => {
+    if (canvasRef.current) {
+      const frontCanvasImage = canvasRef.current.toDataURL("image/png");
+
+      // Assuming the back view is rendered on another canvas or part of the same canvas
+      const backCanvasImage = canvasRef.current.toDataURL("image/png");
+
+      return { frontCanvasImage, backCanvasImage };
+    }
+    return { frontCanvasImage: "", backCanvasImage: "" };
+  };
+
+  // Handle order form submission
+  const handleOrderSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const { frontCanvasImage, backCanvasImage } = captureCanvasImages();
+    
+    const orderData = {
+      name,
+      email,
+      selectedType,
+      selectedColor,
+      selectedTexture,
+      selectedSize,
+      frontCanvasImage, // Send front canvas image
+      backCanvasImage, // Send back canvas image
+    };
+    console.log("Order submitted: ", orderData);
+    setOrderFormVisible(false); // Close the form after submission
+  };
+
 
   const moveLogo = (direction: "up" | "down" | "left" | "right", index: number, view: "front" | "back") => {
     const step = 10;
@@ -195,6 +241,7 @@ const CustomTShirt: React.FC = () => {
       setCustomTextBack("");
     }
   };
+  
  
   return (
     <div className="min-h-screen bg-transparent text-white flex flex-col items-center p-10 font-sans">
@@ -295,8 +342,8 @@ const CustomTShirt: React.FC = () => {
 </div>
 
           
-          <div className="flex flex-col space-y-6">
-  <label className="text-2xl font-thin">UPLOAD T-SHIRT</label>
+<div className="flex flex-col space-y-6">
+  <label className="text-2xl font-thin">UPLOAD T-SHIRT FRONT</label>
   <input
     type="file"
     accept="image/*"
@@ -304,11 +351,25 @@ const CustomTShirt: React.FC = () => {
     onChange={(e) => {
       if (e.target.files && e.target.files[0]) {
         const file = e.target.files[0];
-        setUploadedTShirtImage(URL.createObjectURL(file)); // Update the uploaded image
+        setUploadedTShirtFront(URL.createObjectURL(file)); // Update the uploaded front image
+      }
+    }}
+  />
+
+  <label className="text-2xl font-thin">UPLOAD T-SHIRT BACK</label>
+  <input
+    type="file"
+    accept="image/*"
+    className="bg-transparent border text-slate-100 px-3 py-3 rounded-3xl"
+    onChange={(e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        setUploadedTShirtBack(URL.createObjectURL(file)); // Update the uploaded back image
       }
     }}
   />
 </div>
+
 
         </div>
         {/* T-Shirt Preview */}
@@ -316,24 +377,24 @@ const CustomTShirt: React.FC = () => {
   className="lg:w-3/4 flex flex-col items-center bg-transparent border rounded-lg p-6 shadow-xl relative"
   style={{ height: "600px" }}
 >
-  <div className="relative w-3/4 h-[500px]">
-    {uploadedTShirtImage ? (
-      <Image
-        src={uploadedTShirtImage}
-        alt="Uploaded T-Shirt"
-        layout="fill"
-        objectFit="cover"
-        className="rounded-lg shadow-md"
-      />
-    ) : (
-      <Image
-        src={getTShirtImage(view) || ""}
-        alt={`T-Shirt ${view}`}
-        layout="fill"
-        objectFit="cover"
-        className="rounded-lg shadow-md"
-      />
-    )}
+<div className="relative w-3/4 h-[500px]">
+          {getImageForView() ? (
+            <Image
+              src={getImageForView()||""}
+              alt={`Uploaded T-Shirt - ${view}`}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg shadow-md"
+            />
+          ) : (
+            <Image
+              src={getTShirtImage(view)||""}
+              alt={`T-Shirt ${view}`}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg shadow-md"
+            />
+          )}
     {(view === "front" ? uploadedLogosFront : uploadedLogosBack).map((logo, index) => (
       <Image
         key={index}
@@ -364,13 +425,14 @@ const CustomTShirt: React.FC = () => {
   </div>
   <div className="flex flex-col space-y-6 space-x-4">
   <div className="flex space-x-4">
+    {/* Select Quantity */}
   <label className="text-2xl font-thin">SELECT QUANTITY</label>
   <select
     value={quantity}
     onChange={(e) => setQuantity(Number(e.target.value))}
-    className="bg-transparent border text-slate-100 px-4 py-2 rounded-md"
+    className="bg-black border text-slate-100 px-4 py-2 rounded-md "
   >
-    {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+    {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
       <option key={num} value={num}>
         {num}
       </option>
@@ -378,7 +440,7 @@ const CustomTShirt: React.FC = () => {
   </select>
 </div>
   <div className="flex justify-center mt-8">
-    {/* Select Quantity */}
+    
 
 
           <button
@@ -398,7 +460,7 @@ const CustomTShirt: React.FC = () => {
 
           {/* View Buttons */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-white mb-2">View</h3>
+            <h3 className="text-2xl font-thin">View</h3>
             <button
               className={`w-full py-2 px-4 rounded-md ${view === "front" ? "bg-yellow-500 text-black" : "bg-transparent border"}`}
               onClick={() => setView("front")}
@@ -413,7 +475,7 @@ const CustomTShirt: React.FC = () => {
             </button>
           </div>
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-white mb-2">Upload Logo</h3>
+            <h3 className="text-2xl font-thin">Upload Logo</h3>
             <input
               type="file"
               accept="image/*"
@@ -429,43 +491,43 @@ const CustomTShirt: React.FC = () => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => moveLogo("up", index, view)}
-                  className="bg-transparent border text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border text-white py-2 px-4 rounded-md"
                 >
                   Up
                 </button>
                 <button
                   onClick={() => moveLogo("down", index, view)}
-                  className="bg-transparent border text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border text-white py-2 px-4 rounded-md"
                 >
                   Down
                 </button>
                 <button
                   onClick={() => moveLogo("left", index, view)}
-                  className="bg-transparent border text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border text-white py-2 px-4 rounded-md"
                 >
                   Left
                 </button>
                 <button
                   onClick={() => moveLogo("right", index, view)}
-                  className="bg-transparent border text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border text-white py-2 px-4 rounded-md"
                 >
                   Right
                 </button>
                 <button
                   onClick={() => resizeLogo("increase", index, view)}
-                  className="bg-transparent border border-green-600 text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border border-green-600 text-white py-2 px-4 rounded-md"
                 >
                   Increase Size
                 </button>
                 <button
                   onClick={() => resizeLogo("decrease", index, view)}
-                  className="bg-transparent border border-red-400 text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border border-red-400 text-white py-2 px-4 rounded-md"
                 >
                   Decrease Size
                 </button>
                 <button
                   onClick={() => handleRemoveLogo(index, view)}
-                  className="bg-transparent border border-red-600 text-white py-1 px-2 rounded-md"
+                  className="bg-transparent border border-red-600 text-white py-2 px-10 rounded-md"
                 >
                   Remove
                 </button>
@@ -474,7 +536,7 @@ const CustomTShirt: React.FC = () => {
             
           ))}
  <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-white mb-2">Select Text:</h3>
+            <h3 className="text-2xl font-thin">Select Text:</h3>
             <input
               type="text"
               value={view === "front" ? customTextFront : customTextBack}
@@ -487,7 +549,7 @@ const CustomTShirt: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-white mb-2">Text Color:</h3>
+            <h3 className="text-2xl font-thin">Text Color:</h3>
             <input
               type="color"
               value={view === "front" ? textColorFront : textColorBack}
@@ -499,28 +561,28 @@ const CustomTShirt: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white mb-2">Move Text:</h3>
+            <h3 className="text-2xl font-thin">Move Text:</h3>
             <div className="flex gap-2">
               <button
-                className="bg-blue-500 text-white py-1 px-2 text-sm rounded-md"
+                className="bg-blue-500 text-white py-2 px-4 text-sm rounded-md"
                 onClick={() => moveText("up", view)}
               >
                 Up
               </button>
               <button
-                className="bg-blue-500 text-white py-1 px-2 text-sm rounded-md"
+                className="bg-blue-500 text-white py-2 px-4 text-sm rounded-md"
                 onClick={() => moveText("down", view)}
               >
                 Down
               </button>
               <button
-                className="bg-blue-500 text-white py-1 px-2 text-sm rounded-md"
+                className="bg-blue-500 text-white py-2 px-4 text-sm rounded-md"
                 onClick={() => moveText("left", view)}
               >
                 Left
               </button>
               <button
-                className="bg-blue-500 text-white py-1 px-2 text-sm rounded-md"
+                className="bg-blue-500 text-white py-2 px-4 text-sm rounded-md"
                 onClick={() => moveText("right", view)}
               >
                 Right
@@ -529,16 +591,16 @@ const CustomTShirt: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white mb-2">Adjust Text Size:</h3>
+            <h3 className="text-2xl font-thin">Adjust Text Size:</h3>
             <div className="flex gap-2">
               <button
-                className="bg-green-500 text-white py-1 px-2 text-sm rounded-md"
+                className="bg-green-500 text-white py-2 px-4 text-sm rounded-md"
                 onClick={() => adjustTextSize("increase")}
               >
                 Increase
               </button>
               <button
-                className="bg-red-500 text-white py-1 px-2 text-sm rounded-md"
+                className="bg-red-500 text-white py-2 px-4 text-sm rounded-md"
                 onClick={() => adjustTextSize("decrease")}
               >
                 Decrease

@@ -1,10 +1,9 @@
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import { SessionProvider } from "next-auth/react";
 
+import { Cartcontextprovider } from "@/context/CartContextprovider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +14,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 // need to come back
 export const metadata: Metadata = {
   title: "Zestwear",
@@ -30,14 +30,12 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      > 
-      {/* need to come back       */}
-     
-        <Navbar/>
-     
-      
-        {children}
-        
+      >
+        {/* need to come back */}
+        <Cartcontextprovider> {/* ✅ Properly wrapping */}
+          <Navbar />
+          {children}
+        </Cartcontextprovider> {/* ✅ Properly closed */}
       </body>
     </html>
   );

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 // Define the Product type
 interface Product {
-  id: number;
+  id: string; // Updated to string type since `id` should be a string in the API
   name: string;
   price: string;
   description: string;
@@ -21,7 +21,8 @@ const HoodiesPage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/brah/hoodie.json");
+        // Fetch products from the API endpoint (assuming the API is set up for this)
+        const response = await fetch("/api/products?category=hoodie&brand=brahmand");
 
         if (!response.ok) {
           throw new Error("Failed to fetch product data.");

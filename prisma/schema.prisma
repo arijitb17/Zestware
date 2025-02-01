@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,34 +8,94 @@ datasource db {
 }
 
 model Users {
-  id           Int       @id@default(autoincrement())
-  firstname    String 
-  lastname     String 
-  username     String
-  email        String    @unique
-  password     String 
-  orders       Orders[]
+  id        Int       @id @default(autoincrement())
+  firstname String 
+  lastname  String 
+  username  String
+  email     String    @unique
+  password  String 
+  orders    Orders[]  
 }
 
-model Products {
-  id             Int       @id@default(autoincrement())
-  type           String 
-  price          String
-  mrp            String
-  description    String 
-  artistDescription String
-  discount       String
-  image          String[]
-  details        String
-  orders         Orders[]
+model Product {
+  id                String   @id @default(cuid())
+  name              String
+  description       String
+  artistDescription String?
+  image             String
+  price             String
+  mrp               String?
+  discount          String?
+  stockPhotos       String[] @default([])
+  details           String?
+  sizes             Size[]   @relation("ProductSizes")
+  orders            Orders[]  @relation("ProductOrders") 
+
+  category          Category
+  brand             Brand     // ✅ New field for brand
+}
+
+enum Category {
+  hoodie
+  tshirt
+}
+
+enum Brand {  // ✅ New Enum for brands
+  brahmand
+  nirbhay
+}
+
+model Size {
+  id        String   @id @default(cuid())
+  product   Product  @relation("ProductSizes", fields: [productId], references: [id])
+  productId String
+  size      String
+  price     String
+  stock     Int
 }
 
 model Orders {
-  id           Int       @id@default(autoincrement())
-  done         Boolean   @default(false)
-  UserId       Int
-  ProductId    Int
-  user         Users      @relation( fields: [UserId],references: [id])
-  product      Products   @relation(fields: [ProductId],references: [id])
+  id        Int      @id @default(autoincrement())
+  done      Boolean  @default(false)
+  UserId    Int
+  ProductId String
+  user      Users    @relation(fields: [UserId], references: [id])
+  product   Product  @relation("ProductOrders", fields: [ProductId], references: [id]) 
 }
- 
+
+model District {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  schools   School[]  // Relation to schools
+}
+
+model School {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  districtId  Int
+  district    District  @relation(fields: [districtId], references: [id])
+  uniforms    Uniform[] // Relation to uniforms
+}
+
+model Uniform {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  image       String
+  price       String
+  mrp         String?
+  rating      Float
+  discount    String?
+  schoolId    Int
+  school      School    @relation(fields: [schoolId], references: [id])
+  uniformSizes UniformSize[]  // Relation to UniformSize model
+}
+
+model UniformSize {
+  id        Int      @id @default(autoincrement())
+  uniformId Int
+  uniform   Uniform  @relation(fields: [uniformId], references: [id])
+  size      String
+  price     String
+  stock     Int
+}

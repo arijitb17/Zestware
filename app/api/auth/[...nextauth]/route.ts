@@ -32,18 +32,18 @@ const handler = NextAuth({
             }
           }
         }),
-         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
           }),
           AppleProvider({
-            clientId: process.env.APPLE_ID,
-            clientSecret: process.env.APPLE_SECRET
+            clientId: process.env.APPLE_ID as string,
+            clientSecret: process.env.APPLE_SECRET as string
           })
+          
       ],
       secret:process.env.NEXTAUTH_SECRET
             
 })
 
 export { handler as GET, handler as POST }
-

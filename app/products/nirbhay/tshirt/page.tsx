@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -5,7 +6,7 @@ import Link from "next/link";
 
 // Define the Product type
 interface Product {
-  id: number;
+  id: string; // Updated to string type since `id` should be a string in the API
   name: string;
   price: string;
   description: string;
@@ -21,7 +22,8 @@ const TshirtsPage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/nirbh/Tshirt.json");
+        // Fetch products from the API endpoint (assuming the API is set up for this)
+        const response = await fetch("/api/products?category=tshirt&brand=nirbhay");
 
         if (!response.ok) {
           throw new Error("Failed to fetch product data.");
@@ -41,6 +43,7 @@ const TshirtsPage: React.FC = () => {
 
     fetchProducts();
   }, []);
+
 
   return (
     <div className="bg-transparent text-white min-h-screen">

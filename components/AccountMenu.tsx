@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { FaShoppingCart, FaHeart, FaClipboardList, FaSignOutAlt } from 'react-icons/fa';
+import { useCart }from "@/context/CartContextprovider"
 
 import { useSession,signIn,signOut } from 'next-auth/react';
 const AccountMenu: React.FC = () => {
@@ -11,7 +12,7 @@ const AccountMenu: React.FC = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
+  const { cart } = useCart();
   const session = useSession();
   return (
     <div className="relative">
@@ -41,6 +42,11 @@ const AccountMenu: React.FC = () => {
               >
                 <FaShoppingCart className="w-5 h-5 mr-2" />
                 Cart
+                {cart.length > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 text-xs rounded-full">
+            {cart.reduce((acc, item) => acc + (item.quantity || 1), 0)}
+          </span>
+                )}
               </Link>
             </li>
             <li className="mt-2">
