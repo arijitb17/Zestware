@@ -2,15 +2,18 @@
 import React, { useState } from "react";
 import tshirtData from "@/public/custom/tshirts.json";
 import Image from "next/image";
-import {  useRef, useEffect } from 'react';
+import {  useRef,useEffect } from 'react';
+
 
 
 const CustomTShirt: React.FC = () => {
+
   const [selectedType, setSelectedType] = useState<string>("Round Neck");
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
-  const [uploadedLogosFront, setUploadedLogosFront] = useState<File[]>([]);
-  const [uploadedLogosBack, setUploadedLogosBack] = useState<File[]>([]);
+  const [uploadedLogosFront, setUploadedLogosFront] = useState<string[]>([]);
+  const [uploadedLogosBack, setUploadedLogosBack] = useState<string[]>([]);
+  
   const [customTextFront, setCustomTextFront] = useState<string>("");
   const [customTextBack, setCustomTextBack] = useState<string>("");
   const [textColorFront, setTextColorFront] = useState<string>("white");
@@ -25,13 +28,8 @@ const CustomTShirt: React.FC = () => {
   const [logoPositionsBack, setLogoPositionsBack] = useState<{ x: number; y: number }[]>([{ x: 100, y: 100 }]);
   const [logoSizesFront, setLogoSizesFront] = useState<number[]>([64]);
   const [logoSizesBack, setLogoSizesBack] = useState<number[]>([64]);
-  const [uploadedTShirtImage, setUploadedTShirtImage] = useState<string | null>(null);
   const [uploadedTShirtFront, setUploadedTShirtFront] = useState<string | null>(null);
   const [uploadedTShirtBack, setUploadedTShirtBack] = useState<string | null>(null);
-  
-  const [orderFormVisible, setOrderFormVisible] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   
   const getImageForView = () => {
     if (view === "front" && uploadedTShirtFront) {
@@ -73,7 +71,8 @@ const CustomTShirt: React.FC = () => {
   
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>, view: "front" | "back") => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+      const file = URL.createObjectURL(e.target.files[0]); // ✅ Convert to string (URL)
+
       if (view === "front") {
         setUploadedLogosFront((prev) => [...prev, file]);
         setLogoPositionsFront((prev) => [...prev, { x: 100, y: 100 }]);
@@ -97,37 +96,82 @@ const CustomTShirt: React.FC = () => {
       setLogoSizesBack((prev) => prev.filter((_, idx) => idx !== index));
     }
   };
-  const captureCanvasImages = () => {
-    if (canvasRef.current) {
-      const frontCanvasImage = canvasRef.current.toDataURL("image/png");
-
-      // Assuming the back view is rendered on another canvas or part of the same canvas
-      const backCanvasImage = canvasRef.current.toDataURL("image/png");
-
-      return { frontCanvasImage, backCanvasImage };
-    }
-    return { frontCanvasImage: "", backCanvasImage: "" };
-  };
-
-  // Handle order form submission
-  const handleOrderSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const { frontCanvasImage, backCanvasImage } = captureCanvasImages();
-    
-    const orderData = {
-      name,
-      email,
-      selectedType,
-      selectedColor,
-      selectedTexture,
-      selectedSize,
-      frontCanvasImage, // Send front canvas image
-      backCanvasImage, // Send back canvas image
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+  
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+    // Load T-shirt Image
+    const tShirtImage = document.createElement("img");
+    tShirtImage.src = getImageForView() || getTShirtImage(view) || "";
+  
+    tShirtImage.onload = () => {
+      // Draw T-shirt image first
+      ctx.drawImage(tShirtImage, 0, 0, canvas.width, canvas.height);
+  
+      // Get logos, positions, and sizes based on the current view
+      const logos = view === "front" ? uploadedLogosFront : uploadedLogosBack;
+      const logoPositions = view === "front" ? logoPositionsFront : logoPositionsBack;
+      const logoSizes = view === "front" ? logoSizesFront : logoSizesBack;
+  
+      // Load and draw logos
+      logos.forEach((logo, index) => {
+        const img = new window.Image(); // Native HTMLImageElement
+        img.src = logo; // Just use the string directly
+        img.onload = () => {
+          // Draw logos with updated positions
+          ctx.drawImage(img, logoPositions[index].x, logoPositions[index].y, logoSizes[index], logoSizes[index]);
+        };
+      });
+  
+      // Draw Custom Text
+      const customText = view === "front" ? customTextFront : customTextBack;
+      if (customText) {
+        ctx.fillStyle = view === "front" ? textColorFront : textColorBack;
+        ctx.font = `${textSize}px Poppins`;
+        const textPosition = view === "front" ? textPositionFront : textPositionBack;
+        ctx.fillText(customText, textPosition.x, textPosition.y);
+      }
     };
-    console.log("Order submitted: ", orderData);
-    setOrderFormVisible(false); // Close the form after submission
+  }, [
+    view,
+    uploadedLogosFront,
+    uploadedLogosBack,
+    logoPositionsFront,
+    logoPositionsBack,
+    logoSizesFront,
+    logoSizesBack,
+    customTextFront,
+    customTextBack,
+    textPositionFront,
+    textPositionBack,
+    textSize,
+  ]);
+  
+  const saveTShirtImage = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+  
+    // Get the front and back canvas images
+    const frontCanvasImage = canvas.toDataURL("image/png"); // Capture front canvas as a PNG image
+    const backCanvasImage = canvas.toDataURL("image/png"); // Capture back canvas as a PNG image
+  
+    // Create an anchor element to trigger the download
+    const downloadLinkFront = document.createElement("a");
+    downloadLinkFront.href = frontCanvasImage;
+    downloadLinkFront.download = "front_tshirt.png"; // Set the file name for the front image
+    downloadLinkFront.click(); // Trigger the download for the front
+  
+    const downloadLinkBack = document.createElement("a");
+    downloadLinkBack.href = backCanvasImage;
+    downloadLinkBack.download = "back_tshirt.png"; // Set the file name for the back image
+    downloadLinkBack.click(); // Trigger the download for the back
   };
-
+  
 
   const moveLogo = (direction: "up" | "down" | "left" | "right", index: number, view: "front" | "back") => {
     const step = 10;
@@ -264,25 +308,25 @@ const CustomTShirt: React.FC = () => {
             </select>
           </div>
 
-          {/* Select Size */}
-          <div className="flex flex-col space-y-6">
-  <label className="text-2xl font-thin">SELECT SIZE</label>
-  <div className="flex space-x-3">
-    {["S", "M", "L", "XL", "XXL"].map((size) => (
-      <button
-        key={size}
-        className={`py-2 px-4 rounded-3xl w-16 h-12 flex items-center justify-center ${
-          selectedSize === size
-            ? "bg-yellow-500 text-black"
-            : "bg-transparent border text-white"
-        }`}
-        onClick={() => setSelectedSize(size)}
-      >
-        {size}
-      </button>
-    ))}
-  </div>
-</div>
+                {/* Select Size */}
+                <div className="flex flex-col space-y-6">
+        <label className="text-2xl font-thin">SELECT SIZE</label>
+        <div className="flex space-x-3">
+          {["S", "M", "L", "XL", "XXL"].map((size) => (
+            <button
+              key={size}
+              className={`py-2 px-4 rounded-3xl w-16 h-12 flex items-center justify-center ${
+                selectedSize === size
+                  ? "bg-yellow-500 text-black"
+                  : "bg-transparent border text-white"
+              }`}
+              onClick={() => setSelectedSize(size)}
+            >
+              {size}
+            </button>
+          ))}
+            </div>
+          </div>
 
 
           {/* Select Color */}
@@ -309,26 +353,26 @@ const CustomTShirt: React.FC = () => {
             </div>
           </div>
           {/* Select Texture */}
-<div className="flex flex-col space-y-4">
-  <label className="text-2xl font-thin">SELECT TEXTURE</label>
-  <div className="flex space-x-3">
-    {tshirt?.textures.map((texture) => (
-      <div
-        key={texture.name}
-        className={`w-12 h-12 bg-transparent rounded-full cursor-pointer ${
-          selectedTexture === texture.name
-            ? "border-2 border-yellow-500"
-            : "border border-gray-400"
-        }`}
-        onClick={() => {
-          if (selectedTexture === texture.name) {
-            setSelectedTexture(null); // Deselect texture
-          } else {
-            setSelectedTexture(texture.name); // Select texture
-            setSelectedColor(null); // Deselect color
-          }
-        }}
-      >
+    <div className="flex flex-col space-y-4">
+      <label className="text-2xl font-thin">SELECT TEXTURE</label>
+      <div className="flex space-x-3">
+        {tshirt?.textures.map((texture) => (
+          <div
+            key={texture.name}
+            className={`w-12 h-12 bg-transparent rounded-full cursor-pointer ${
+              selectedTexture === texture.name
+                ? "border-2 border-yellow-500"
+                : "border border-gray-400"
+            }`}
+            onClick={() => {
+              if (selectedTexture === texture.name) {
+                setSelectedTexture(null); // Deselect texture
+              } else {
+                setSelectedTexture(texture.name); // Select texture
+                setSelectedColor(null); // Deselect color
+              }
+            }}
+          >
         <Image
           src={view === "front" ? texture.frontImageUrl : texture.backImageUrl}
           alt={texture.name}
@@ -356,75 +400,31 @@ const CustomTShirt: React.FC = () => {
     }}
   />
 
-  <label className="text-2xl font-thin">UPLOAD T-SHIRT BACK</label>
-  <input
-    type="file"
-    accept="image/*"
-    className="bg-transparent border text-slate-100 px-3 py-3 rounded-3xl"
-    onChange={(e) => {
-      if (e.target.files && e.target.files[0]) {
-        const file = e.target.files[0];
-        setUploadedTShirtBack(URL.createObjectURL(file)); // Update the uploaded back image
-      }
-    }}
-  />
-</div>
-
-
-        </div>
-        {/* T-Shirt Preview */}
-        <div
-  className="lg:w-3/4 flex flex-col items-center bg-transparent border rounded-lg p-6 shadow-xl relative"
-  style={{ height: "600px" }}
->
-<div className="relative w-3/4 h-[500px]">
-          {getImageForView() ? (
-            <Image
-              src={getImageForView()||""}
-              alt={`Uploaded T-Shirt - ${view}`}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg shadow-md"
-            />
-          ) : (
-            <Image
-              src={getTShirtImage(view)||""}
-              alt={`T-Shirt ${view}`}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg shadow-md"
-            />
-          )}
-    {(view === "front" ? uploadedLogosFront : uploadedLogosBack).map((logo, index) => (
-      <Image
-        key={index}
-        src={URL.createObjectURL(logo)}
-        alt="Uploaded Logo"
-        width={view === "front" ? logoSizesFront[index] : logoSizesBack[index]}
-        height={view === "front" ? logoSizesFront[index] : logoSizesBack[index]}
-        className="absolute transition-transform duration-300"
-        style={{
-          top: `${view === "front" ? logoPositionsFront[index].y : logoPositionsBack[index].y}px`,
-          left: `${view === "front" ? logoPositionsFront[index].x : logoPositionsBack[index].x}px`,
+      <label className="text-2xl font-thin">UPLOAD T-SHIRT BACK</label>
+      <input
+        type="file"
+        accept="image/*"
+        className="bg-transparent border text-slate-100 px-3 py-3 rounded-3xl"
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setUploadedTShirtBack(URL.createObjectURL(file)); // Update the uploaded back image
+          }
         }}
       />
-    ))}
-    {(view === "front" ? customTextFront : customTextBack) && (
-      <p
-        className="absolute font-bold"
-        style={{
-          color: view === "front" ? textColorFront : textColorBack,
-          fontSize: `${textSize}px`,
-          top: `${view === "front" ? textPositionFront.y : textPositionBack.y}px`,
-          left: `${view === "front" ? textPositionFront.x : textPositionBack.x}px`,
-        }}
-      >
-        {view === "front" ? customTextFront : customTextBack}
-      </p>
-    )}
-  </div>
-  <div className="flex flex-col space-y-6 space-x-4">
-  <div className="flex space-x-4">
+    </div>
+        </div>
+        {/* T-Shirt Preview */}
+            <div
+      className="lg:w-3/4 flex flex-col items-center bg-transparent border rounded-lg p-6 shadow-xl relative"
+      style={{ height: "600px" }}
+    >
+    <div className="relative w-3/4 h-[500px]">
+    <canvas ref={canvasRef} width={500} height={500}></canvas> 
+
+      </div>
+      <div className="flex flex-col space-y-6 space-x-4">
+      <div className="flex space-x-4">
     {/* Select Quantity */}
   <label className="text-2xl font-thin">SELECT QUANTITY</label>
   <select
@@ -440,20 +440,15 @@ const CustomTShirt: React.FC = () => {
   </select>
 </div>
   <div className="flex justify-center mt-8">
-    
-
-
-          <button
-            className="bg-transparent border hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-xl"
-            
-          >
-            Add to Cart
-          </button>
+  <button
+  className="bg-yellow-500 text-black p-4 rounded-lg"
+  onClick={saveTShirtImage}
+>
+  Save T-shirt
+</button>
         </div>
-        </div>
-</div>
-
-
+      </div>
+    </div>
         {/* Tools Panel */}
         <div className="lg:w-2/4 flex flex-col space-y-6 bg-transparent border p-6 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold text-yellow-500 mb-4">Customize Your T-Shirt</h2>
@@ -607,7 +602,6 @@ const CustomTShirt: React.FC = () => {
               </button>
             </div>
           </div>
-
           <div>
             <button
               className="bg-red-600 text-white w-full py-2 px-4 text-sm rounded-md"
@@ -615,14 +609,10 @@ const CustomTShirt: React.FC = () => {
             >
               Remove Text
             </button>
-  </div>
-</div>
-
-        
-        </div>
-        
+             </div>
+          </div>
+        </div>  
       </div>
-    
   );
 };
 

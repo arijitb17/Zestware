@@ -99,3 +99,17 @@ model UniformSize {
   price     String
   stock     Int
 }
+model Order {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String
+  type        String
+  color       String?
+  texture     String?
+  size        String
+  quantity    Int
+  frontImage  String?
+  backImage   String?
+  createdAt   DateTime @default(now())
+}
